@@ -1,5 +1,5 @@
 # Tic Tac Toe Web App
-This web application allows two individuals to play tic tac toe with each other.
+This web application allows two individuals to play tic tac toe with each other. Created using this tutorial: https://reactjs.org/tutorial/tutorial.html
 
 ## To Do
 - [ ] Display the location for each move in the format (col, row) in the move history list.
