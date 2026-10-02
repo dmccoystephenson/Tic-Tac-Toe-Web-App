@@ -25,7 +25,7 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci
-      - name: Build (relative asset paths, via "homepage": ".")
+      - name: Build (relative asset paths, from the homepage field)
         run: npm run build
       - name: The build is a self-contained site
         run: |
