@@ -1,6 +1,9 @@
 # Tic Tac Toe Web App
 This web application allows two individuals to play tic tac toe with each other. This was created using a tutorial (https://reactjs.org/tutorial/tutorial.html) to gain familiarity with ReactJS.
 
+## Play in your browser
+Two players take turns on one device at https://tic-tac-toe-web.play.danielstephenson.dev, listed with the rest at [danielstephenson.dev/play](https://danielstephenson.dev/play). Pushes to `Main` build it and deploy it to [arcade](https://github.com/Stephenson-Software/arcade) (`.github/workflows/browser.yml`).
+
 ## To Do
 The following tasks were given at the end of the tutorial.
 - [ ] Display the location for each move in the format (col, row) in the move history list.

@@ -1,0 +1,43 @@
+# Builds the app and deploys it to arcade (https://github.com/Stephenson-Software/arcade,
+# RFC 0012 `kind: static`), where it is served at
+# https://tic-tac-toe-web.play.danielstephenson.dev and listed at danielstephenson.dev/play.
+#
+# Every pull request builds it. A push to Main deploys it once the repository
+# variable ARCADE_ENABLED is 'true' (or by hand: Actions -> Run workflow).
+name: Browser build
+
+on:
+  pull_request:
+  push:
+    branches: [ Main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Build (relative asset paths, via "homepage": ".")
+        run: npm run build
+      - name: The build is a self-contained site
+        run: |
+          test -f build/index.html
+          grep -q 'src="./static/js/' build/index.html
+      - name: Version this build (version.txt + commit)
+        run: echo "$(tr -d '[:space:]' < version.txt)+g${GITHUB_SHA::7}" > build-version.txt
+      - name: Deploy to arcade
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && vars.ARCADE_ENABLED == 'true')
+        uses: Stephenson-Software/arcade-deploy@v1
+        with:
+          slug: tic-tac-toe-web
+          token: ${{ secrets.ARCADE_TOKEN }}
+          site-dir: build
+          version-file: build-version.txt
