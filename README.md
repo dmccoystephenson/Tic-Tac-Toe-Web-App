@@ -4,6 +4,11 @@ This web application allows two individuals to play tic tac toe with each other.
 ## Play in your browser
 Two players take turns on one device at https://tic-tac-toe-web.play.danielstephenson.dev, listed with the rest at [danielstephenson.dev/play](https://danielstephenson.dev/play). Pushes to `Main` build it and deploy it to [arcade](https://github.com/Stephenson-Software/arcade) (`.github/workflows/browser.yml`).
 
+## Achievements
+The game is two people on one device, so it keeps no high score. Instead, a player signed in to [arcade-social](https://github.com/Stephenson-Software/arcade-social) (`https://api.play.danielstephenson.dev`) at https://tic-tac-toe-web.play.danielstephenson.dev unlocks two achievements: `first-game` for finishing a game (a win or a draw) and `draw` for a draw, each sent at most once per page load. Sign-in happens on arcade-social's own page; the game never sees a password, and nothing is sent while signed out or from any other address (such as `npm start` on localhost). Achievements are reported by the player's browser and can be forged.
+
+The client is `public/arcade-scores.js`, vendored unchanged from arcade-social's `clients/js` and loaded by `public/index.html`; `src/achievements.js` decides what a finished game earns, and its tests (`src/achievements.test.js`) run with `CI=true npm test`, also in the `Browser build` workflow.
+
 ## To Do
 The following tasks were given at the end of the tutorial.
 - [ ] Display the location for each move in the format (col, row) in the move history list.
@@ -11,7 +16,7 @@ The following tasks were given at the end of the tutorial.
 - [ ] Rewrite Board to use two loops to make the squares instead of hardcoding them.
 - [ ] Add a toggle button that lets you sort the moves in either ascending or descending order.
 - [ ] When someone wins, highlight the three squares that caused the win.
-- [ ] When no one wins, display a message about the result being a draw.
+- [x] When no one wins, display a message about the result being a draw.
 
 ---
 
