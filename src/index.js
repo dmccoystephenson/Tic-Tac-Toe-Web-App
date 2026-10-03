@@ -91,7 +91,9 @@ function Square(props) {
             'go to game start';
             return (
                 <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                    <button onClick={() => this.jumpTo(move)}>
+                        {move === this.state.stepNumber ? <b>{desc}</b> : desc}
+                    </button>
                 </li>
             );
         });
@@ -99,6 +101,9 @@ function Square(props) {
         let status;
         if (winner) {
             status = "Winner: " + winner;
+        }
+        else if (current.squares.every((square) => square)) {
+            status = "Draw: no one wins";
         }
         else {
             status = "Next player: " + (this.state.xIsNext ? 'X' : 'O');
