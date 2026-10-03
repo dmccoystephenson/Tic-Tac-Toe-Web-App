@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import { outcome, reportFinishedGame } from './achievements';
 
 function Square(props) {
       return (
@@ -71,6 +72,7 @@ function Square(props) {
             xIsNext: !this.state.xIsNext,
             stepNumber: history.length,
         });
+        reportFinishedGame(outcome(squares, calculateWinner(squares)));
     }
 
     jumpTo(step) {
@@ -84,6 +86,7 @@ function Square(props) {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares)
+        const result = outcome(current.squares, winner);
 
         const moves = history.map((step, move) => {
             const desc = move ?
@@ -99,6 +102,9 @@ function Square(props) {
         let status;
         if (winner) {
             status = "Winner: " + winner;
+        }
+        else if (result === 'draw') {
+            status = "Draw";
         }
         else {
             status = "Next player: " + (this.state.xIsNext ? 'X' : 'O');

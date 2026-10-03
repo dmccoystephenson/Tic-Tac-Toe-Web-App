@@ -25,6 +25,10 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci
+      - name: Unit tests
+        run: npx react-scripts test --watchAll=false
+        env:
+          CI: true
       - name: Build (relative asset paths, from the homepage field)
         run: npm run build
       - name: The build is a self-contained site
