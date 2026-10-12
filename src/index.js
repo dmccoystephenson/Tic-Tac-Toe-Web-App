@@ -16,31 +16,28 @@ function Square(props) {
     renderSquare(i) {
       return (
         <Square
+            key={i}
             value={this.props.squares[i]}
             onClick={() => this.props.onClick(i)}
         />
         );
     }
   
-    render() {        
+    render() {
+        const rows = [];
+        for (let row = 0; row < 3; row++) {
+            const squares = [];
+            for (let col = 0; col < 3; col++) {
+                squares.push(this.renderSquare(row * 3 + col));
+            }
+            rows.push(
+                <div className="board-row" key={row}>
+                    {squares}
+                </div>
+            );
+        }
         return (
-            <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
-            </div>
+            <div>{rows}</div>
         );
         }
   }
@@ -94,7 +91,9 @@ function Square(props) {
             'go to game start';
             return (
                 <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                    <button onClick={() => this.jumpTo(move)}>
+                        {move === this.state.stepNumber ? <b>{desc}</b> : desc}
+                    </button>
                 </li>
             );
         });
