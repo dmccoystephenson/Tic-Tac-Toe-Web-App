@@ -50,6 +50,7 @@ function Square(props) {
             }],
             xIsNext: true,
             stepNumber: 0,
+            ascending: true,
         }
     }
 
@@ -64,6 +65,7 @@ function Square(props) {
         this.setState({
             history: history.concat([{
                 squares: squares,
+                location: i,
             }]),
             xIsNext: !this.state.xIsNext,
             stepNumber: history.length,
@@ -78,6 +80,12 @@ function Square(props) {
         })
     }
 
+    toggleSort() {
+        this.setState({
+            ascending: !this.state.ascending,
+        });
+    }
+
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
@@ -85,8 +93,9 @@ function Square(props) {
         const result = outcome(current.squares, winner);
 
         const moves = history.map((step, move) => {
+            // the location is (col, row), counted from 0 at the top left
             const desc = move ?
-            'Go to move #' + move :
+            'Go to move #' + move + ' (' + (step.location % 3) + ', ' + Math.floor(step.location / 3) + ')' :
             'go to game start';
             return (
                 <li key={move}>
@@ -96,6 +105,9 @@ function Square(props) {
                 </li>
             );
         });
+        if (!this.state.ascending) {
+            moves.reverse();
+        }
 
         let status;
         if (winner) {
@@ -117,7 +129,10 @@ function Square(props) {
             </div>
             <div className="game-info">
                 <div>{status}</div>
-                <ol>{moves}</ol>
+                <button onClick={() => this.toggleSort()}>
+                    {this.state.ascending ? 'Sort descending' : 'Sort ascending'}
+                </button>
+                <ol reversed={!this.state.ascending}>{moves}</ol>
             </div>
             </div>
         );

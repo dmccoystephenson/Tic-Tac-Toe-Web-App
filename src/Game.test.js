@@ -41,7 +41,7 @@ test('a filled square ignores clicks', () => {
   play(0, 0);
   expect(marks()[0]).toBe('X');
   expect(status()).toBe('Next player: O');
-  expect(screen.queryByRole('button', { name: 'Go to move #2' })).toBeNull();
+  expect(screen.queryByRole('button', { name: /^Go to move #2/ })).toBeNull();
 });
 
 test('three in a row wins and the board then ignores clicks', () => {
@@ -63,7 +63,7 @@ test('a full board without a winner is a draw', () => {
 test('jumping to a move restores its board and next player', () => {
   render(<Game />);
   play(0, 4, 8);
-  fireEvent.click(screen.getByRole('button', { name: 'Go to move #1' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Go to move #1 (0, 0)' }));
   expect(marks()).toEqual(['X', '', '', '', '', '', '', '', '']);
   expect(status()).toBe('Next player: O');
   fireEvent.click(screen.getByRole('button', { name: 'go to game start' }));
@@ -74,9 +74,50 @@ test('jumping to a move restores its board and next player', () => {
 test('a move after jumping back discards the later moves', () => {
   render(<Game />);
   play(0, 4, 8);
-  fireEvent.click(screen.getByRole('button', { name: 'Go to move #1' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Go to move #1 (0, 0)' }));
   play(2);
   expect(marks()).toEqual(['X', '', 'O', '', '', '', '', '', '']);
-  expect(screen.getByRole('button', { name: 'Go to move #2' })).toBeTruthy();
-  expect(screen.queryByRole('button', { name: 'Go to move #3' })).toBeNull();
+  expect(screen.getByRole('button', { name: 'Go to move #2 (2, 0)' })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: /^Go to move #3/ })).toBeNull();
+});
+
+function moveList() {
+  return screen.getAllByRole('listitem').map((item) => item.textContent);
+}
+
+test('each move shows the (col, row) it was played at', () => {
+  render(<Game />);
+  play(5, 7, 0);
+  expect(moveList()).toEqual([
+    'go to game start',
+    'Go to move #1 (2, 1)',
+    'Go to move #2 (1, 2)',
+    'Go to move #3 (0, 0)',
+  ]);
+});
+
+test('the sort toggle reverses the move list and back', () => {
+  render(<Game />);
+  play(0, 4);
+  fireEvent.click(screen.getByRole('button', { name: 'Sort descending' }));
+  expect(moveList()).toEqual([
+    'Go to move #2 (1, 1)',
+    'Go to move #1 (0, 0)',
+    'go to game start',
+  ]);
+  fireEvent.click(screen.getByRole('button', { name: 'Sort ascending' }));
+  expect(moveList()).toEqual([
+    'go to game start',
+    'Go to move #1 (0, 0)',
+    'Go to move #2 (1, 1)',
+  ]);
+});
+
+test('a move played while sorted descending appears at the top', () => {
+  render(<Game />);
+  play(0);
+  fireEvent.click(screen.getByRole('button', { name: 'Sort descending' }));
+  play(8);
+  expect(marks()[8]).toBe('O');
+  expect(moveList()[0]).toBe('Go to move #2 (2, 2)');
 });
