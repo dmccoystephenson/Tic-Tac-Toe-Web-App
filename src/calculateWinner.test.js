@@ -1,4 +1,4 @@
-import { calculateWinner } from './calculateWinner';
+import { calculateWinner, winningLine } from './calculateWinner';
 
 const X = 'X', O = 'O', _ = null;
 
@@ -33,4 +33,16 @@ test('a full board without three in a row has no winner', () => {
 
 test('a line of mixed marks is not a win', () => {
   expect(calculateWinner([X, X, O, _, _, _, _, _, _])).toBeNull();
+});
+
+test.each(lines)('the winning line on %i, %i, %i is those three squares', (a, b, c) => {
+  const squares = Array(9).fill(null);
+  squares[a] = squares[b] = squares[c] = X;
+  expect(winningLine(squares)).toEqual([a, b, c]);
+});
+
+test('a board without three in a row has no winning line', () => {
+  expect(winningLine(Array(9).fill(null))).toBeNull();
+  expect(winningLine([X, O, X, X, O, O, O, X, X])).toBeNull();
+  expect(winningLine([X, X, O, _, _, _, _, _, _])).toBeNull();
 });
