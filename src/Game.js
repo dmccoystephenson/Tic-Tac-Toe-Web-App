@@ -1,10 +1,10 @@
 import React from 'react';
-import { calculateWinner } from './calculateWinner';
+import { calculateWinner, winningLine } from './calculateWinner';
 import { outcome, reportFinishedGame } from './achievements';
 
 function Square(props) {
       return (
-        <button className="square" onClick={props.onClick}
+        <button className={props.winning ? 'square winning' : 'square'} onClick={props.onClick}
         >
           {props.value}
         </button>
@@ -17,6 +17,7 @@ function Square(props) {
         <Square
             key={i}
             value={this.props.squares[i]}
+            winning={this.props.winningLine ? this.props.winningLine.includes(i) : false}
             onClick={() => this.props.onClick(i)}
         />
         );
@@ -124,6 +125,7 @@ function Square(props) {
             <div className="game-board">
                 <Board
                     squares={current.squares}
+                    winningLine={winningLine(current.squares)}
                     onClick={(i) => this.handleClick(i)}
                 />
             </div>

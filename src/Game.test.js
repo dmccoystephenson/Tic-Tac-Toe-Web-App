@@ -53,6 +53,33 @@ test('three in a row wins and the board then ignores clicks', () => {
   expect(status()).toBe('Winner: X');
 });
 
+function highlighted() {
+  return squares().flatMap((square, i) => (square.classList.contains('winning') ? [i] : []));
+}
+
+test('a win highlights the three squares that caused it and no others', () => {
+  render(<Game />);
+  play(2, 0, 4, 1, 6);
+  expect(status()).toBe('Winner: X');
+  expect(highlighted()).toEqual([2, 4, 6]);
+});
+
+test('no square is highlighted before a win or after jumping back from one', () => {
+  render(<Game />);
+  play(0, 3, 1, 4);
+  expect(highlighted()).toEqual([]);
+  play(2);
+  expect(highlighted()).toEqual([0, 1, 2]);
+  fireEvent.click(screen.getByRole('button', { name: 'Go to move #4 (1, 1)' }));
+  expect(highlighted()).toEqual([]);
+});
+
+test('a draw highlights no squares', () => {
+  render(<Game />);
+  play(0, 1, 2, 4, 3, 5, 7, 6, 8);
+  expect(highlighted()).toEqual([]);
+});
+
 test('a full board without a winner is a draw', () => {
   render(<Game />);
   play(0, 1, 2, 4, 3, 5, 7, 6, 8);

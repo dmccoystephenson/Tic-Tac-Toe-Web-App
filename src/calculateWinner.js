@@ -1,4 +1,5 @@
-export function calculateWinner(squares) {
+// the three squares of the first line held by one mark, or null if there is none
+export function winningLine(squares) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -12,8 +13,13 @@ export function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return lines[i];
     }
   }
   return null;
+}
+
+export function calculateWinner(squares) {
+  const line = winningLine(squares);
+  return line ? squares[line[0]] : null;
 }
