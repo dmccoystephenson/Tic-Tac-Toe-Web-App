@@ -10,7 +10,15 @@ Two players take turns on one device at https://tic-tac-toe-web.play.danielsteph
 ## Achievements
 The game is two people on one device, so it keeps no high score. Instead, a player signed in to [arcade-social](https://github.com/Stephenson-Software/arcade-social) (`https://api.play.danielstephenson.dev`) at https://tic-tac-toe-web.play.danielstephenson.dev unlocks two achievements: `first-game` for finishing a game (a win or a draw) and `draw` for a draw, each sent at most once per page load. Sign-in happens on arcade-social's own page; the game never sees a password, and nothing is sent while signed out or from any other address (such as `npm start` on localhost). Achievements are reported by the player's browser and can be forged.
 
-The client is `public/arcade-scores.js`, vendored unchanged from arcade-social's `clients/js` and loaded by `public/index.html`; `src/achievements.js` decides what a finished game earns, and its tests (`src/achievements.test.js`) run with `CI=true npm test`, also in the `Browser build` workflow.
+The client is `public/arcade-scores.js`, vendored unchanged from arcade-social's `clients/js` and loaded by `public/index.html`; `src/achievements.js` decides what a finished game earns, and its tests (`src/achievements.test.js`) run with the rest of the suite (see [Tests](#tests)).
+
+## Tests
+The game lives in `src/Game.js` (with `calculateWinner` and `winningLine` in `src/calculateWinner.js`); `src/index.js` only mounts it. Each module has a Jest test beside it:
+- `src/calculateWinner.test.js` — every winning line (its winner and its three squares), no winner on empty, partial, full, and mixed-mark boards
+- `src/Game.test.js` — turns, ignored clicks on filled squares and won boards, win and draw status, the winning-square highlight, jumping through the move history, the (col, row) move labels, and the sort toggle
+- `src/achievements.test.js` — game outcomes, the achievements each earns, and once-per-page-load unlocking
+
+Run them once with `CI=true npm test` (`npm test` alone starts the interactive watch mode). The `Browser build` workflow runs the same suite on every pull request and push to `Main`, before the build.
 
 ## To Do
 The following tasks were given at the end of the tutorial.
