@@ -13,10 +13,10 @@ The game is two people on one device, so it keeps no high score. Instead, a play
 The client is `public/arcade-scores.js`, vendored unchanged from arcade-social's `clients/js` and loaded by `public/index.html`; `src/achievements.js` decides what a finished game earns, and its tests (`src/achievements.test.js`) run with the rest of the suite (see [Tests](#tests)).
 
 ## Tests
-The game lives in `src/Game.js` (with `calculateWinner` and `winningLine` in `src/calculateWinner.js`); `src/index.js` only mounts it. Each module has a Jest test beside it:
+The game lives in `src/Game.js` (with `calculateWinner` and `winningLine` in `src/calculateWinner.js`); `src/index.js` only mounts it. Each of those modules, and `src/achievements.js`, has a Jest test beside it:
 - `src/calculateWinner.test.js` — every winning line (its winner and its three squares), no winner on empty, partial, full, and mixed-mark boards
 - `src/Game.test.js` — turns, ignored clicks on filled squares and won boards, win and draw status, the winning-square highlight, jumping through the move history, the (col, row) move labels, and the sort toggle
-- `src/achievements.test.js` — game outcomes, the achievements each earns, and once-per-page-load unlocking
+- `src/achievements.test.js` — game outcomes, the achievements each earns, once-per-page-load unlocking, and that a missing or throwing client never breaks the game
 
 Run them once with `CI=true npm test` (`npm test` alone starts the interactive watch mode). The `Browser build` workflow runs the same suite on every pull request and push to `Main`, before the build.
 
