@@ -2,7 +2,7 @@
 # RFC 0012 `kind: static`), where it is served at
 # https://tic-tac-toe-web.play.danielstephenson.dev and listed at danielstephenson.dev/play.
 #
-# Every pull request builds it. A push to Main deploys it once the repository
+# Every pull request tests and builds it. A push to Main deploys it once the repository
 # variable ARCADE_ENABLED is 'true' (or by hand: Actions -> Run workflow).
 name: Browser build
 
