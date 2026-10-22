@@ -1,5 +1,16 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Game } from './Game';
+import { reportFinishedGame } from './achievements';
+
+// the reporter remembers what it sent for the whole page load, so Game gets a fresh mock per test
+jest.mock('./achievements', () => ({
+  ...jest.requireActual('./achievements'),
+  reportFinishedGame: jest.fn(),
+}));
+
+beforeEach(() => {
+  reportFinishedGame.mockClear();
+});
 
 // the board renders before the move list, so the first nine buttons are the squares
 function squares() {
@@ -147,4 +158,31 @@ test('a move played while sorted descending appears at the top', () => {
   play(8);
   expect(marks()[8]).toBe('O');
   expect(moveList()[0]).toBe('Go to move #2 (2, 2)');
+});
+
+function reported() {
+  return reportFinishedGame.mock.calls.map(([result]) => result);
+}
+
+test('each move reports the outcome so far, and a win reports the winner', () => {
+  render(<Game />);
+  play(0, 3, 1, 4);
+  expect(reported()).toEqual([null, null, null, null]);
+  play(2);
+  expect(reported()).toEqual([null, null, null, null, 'X']);
+});
+
+test('a full board without a winner reports a draw', () => {
+  render(<Game />);
+  play(0, 1, 2, 4, 3, 5, 7, 6, 8);
+  expect(reported()).toEqual([null, null, null, null, null, null, null, null, 'draw']);
+});
+
+test('ignored clicks report nothing', () => {
+  render(<Game />);
+  play(0, 0);
+  expect(reported()).toEqual([null]);
+  play(3, 1, 4, 2);
+  play(8);
+  expect(reported()).toEqual([null, null, null, null, 'X']);
 });
