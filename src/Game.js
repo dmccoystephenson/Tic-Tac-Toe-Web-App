@@ -5,6 +5,7 @@ import { outcome, reportFinishedGame } from './achievements';
 function Square(props) {
       return (
         <button className={props.winning ? 'square winning' : 'square'} onClick={props.onClick}
+            aria-label={props.label}
         >
           {props.value}
         </button>
@@ -13,9 +14,12 @@ function Square(props) {
   
   class Board extends React.Component {
     renderSquare(i) {
+      // named by its (col, row), as in the move list, and its mark
+      const label = 'Square (' + (i % 3) + ', ' + Math.floor(i / 3) + '), ' + (this.props.squares[i] || 'empty');
       return (
         <Square
             key={i}
+            label={label}
             value={this.props.squares[i]}
             winning={this.props.winningLine ? this.props.winningLine.includes(i) : false}
             onClick={() => this.props.onClick(i)}

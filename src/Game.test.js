@@ -64,6 +64,19 @@ test('three in a row wins and the board then ignores clicks', () => {
   expect(status()).toBe('Winner: X');
 });
 
+test('each square is named by its (col, row) and its mark', () => {
+  render(<Game />);
+  expect(squares().map((square) => square.getAttribute('aria-label'))).toEqual([
+    'Square (0, 0), empty', 'Square (1, 0), empty', 'Square (2, 0), empty',
+    'Square (0, 1), empty', 'Square (1, 1), empty', 'Square (2, 1), empty',
+    'Square (0, 2), empty', 'Square (1, 2), empty', 'Square (2, 2), empty',
+  ]);
+  fireEvent.click(screen.getByRole('button', { name: 'Square (2, 1), empty' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Square (0, 2), empty' }));
+  expect(screen.getByRole('button', { name: 'Square (2, 1), X' })).toBe(squares()[5]);
+  expect(screen.getByRole('button', { name: 'Square (0, 2), O' })).toBe(squares()[6]);
+});
+
 function highlighted() {
   return squares().flatMap((square, i) => (square.classList.contains('winning') ? [i] : []));
 }
