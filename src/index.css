@@ -36,14 +36,6 @@ body {
     background: #ff8;
   }
 
-  .square:focus {
-    outline: none;
-  }
-  
-  .kbd-navigation .square:focus {
-    background: #ddd;
-  }
-  
   .game {
     display: flex;
     flex-direction: row;
