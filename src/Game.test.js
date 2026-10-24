@@ -64,6 +64,15 @@ test('three in a row wins and the board then ignores clicks', () => {
   expect(status()).toBe('Winner: X');
 });
 
+test('the status line is a live region that follows the game', () => {
+  render(<Game />);
+  expect(screen.getByRole('status').textContent).toBe('Next player: X');
+  play(0);
+  expect(screen.getByRole('status').textContent).toBe('Next player: O');
+  play(3, 1, 4, 2);
+  expect(screen.getByRole('status').textContent).toBe('Winner: X');
+});
+
 test('each square is named by its (col, row) and its mark', () => {
   render(<Game />);
   expect(squares().map((square) => square.getAttribute('aria-label'))).toEqual([
