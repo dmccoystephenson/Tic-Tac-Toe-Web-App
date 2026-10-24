@@ -134,7 +134,8 @@ function Square(props) {
                 />
             </div>
             <div className="game-info">
-                <div>{status}</div>
+                {/* a polite live region, so a screen reader announces each turn and the result */}
+                <div className="status" role="status">{status}</div>
                 <button onClick={() => this.toggleSort()}>
                     {this.state.ascending ? 'Sort descending' : 'Sort ascending'}
                 </button>
