@@ -173,6 +173,31 @@ test('the sort toggle reverses the move list and back', () => {
   ]);
 });
 
+function bolded() {
+  return screen.queryAllByText(/^(go to game start|Go to move #\d+)/, { selector: 'b' })
+    .map((item) => item.textContent);
+}
+
+test('only the current move is bold in the move list', () => {
+  render(<Game />);
+  expect(bolded()).toEqual(['go to game start']);
+  play(0, 4);
+  expect(bolded()).toEqual(['Go to move #2 (1, 1)']);
+  fireEvent.click(screen.getByRole('button', { name: 'Go to move #1 (0, 0)' }));
+  expect(bolded()).toEqual(['Go to move #1 (0, 0)']);
+  fireEvent.click(screen.getByRole('button', { name: 'go to game start' }));
+  expect(bolded()).toEqual(['go to game start']);
+});
+
+test('the move list numbers count down while sorted descending', () => {
+  render(<Game />);
+  expect(screen.getByRole('list').hasAttribute('reversed')).toBe(false);
+  fireEvent.click(screen.getByRole('button', { name: 'Sort descending' }));
+  expect(screen.getByRole('list').hasAttribute('reversed')).toBe(true);
+  fireEvent.click(screen.getByRole('button', { name: 'Sort ascending' }));
+  expect(screen.getByRole('list').hasAttribute('reversed')).toBe(false);
+});
+
 test('a move played while sorted descending appears at the top', () => {
   render(<Game />);
   play(0);
