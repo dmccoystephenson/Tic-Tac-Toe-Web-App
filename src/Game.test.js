@@ -107,6 +107,18 @@ test('no square is highlighted before a win or after jumping back from one', () 
   expect(highlighted()).toEqual([]);
 });
 
+test('the winning squares say so in their names, and only while the win is on the board', () => {
+  render(<Game />);
+  play(2, 0, 4, 1, 6);
+  expect(squares().map((square) => square.getAttribute('aria-label'))).toEqual([
+    'Square (0, 0), O', 'Square (1, 0), O', 'Square (2, 0), X, winning',
+    'Square (0, 1), empty', 'Square (1, 1), X, winning', 'Square (2, 1), empty',
+    'Square (0, 2), X, winning', 'Square (1, 2), empty', 'Square (2, 2), empty',
+  ]);
+  fireEvent.click(screen.getByRole('button', { name: 'Go to move #4 (1, 0)' }));
+  expect(squares().filter((square) => square.getAttribute('aria-label').endsWith(', winning'))).toEqual([]);
+});
+
 test('a draw highlights no squares', () => {
   render(<Game />);
   play(0, 1, 2, 4, 3, 5, 7, 6, 8);
@@ -187,6 +199,23 @@ test('only the current move is bold in the move list', () => {
   expect(bolded()).toEqual(['Go to move #1 (0, 0)']);
   fireEvent.click(screen.getByRole('button', { name: 'go to game start' }));
   expect(bolded()).toEqual(['go to game start']);
+});
+
+function current() {
+  return screen.getAllByRole('button')
+    .filter((button) => button.hasAttribute('aria-current'))
+    .map((button) => [button.textContent, button.getAttribute('aria-current')]);
+}
+
+test('only the current move is marked as the current step for screen readers', () => {
+  render(<Game />);
+  expect(current()).toEqual([['go to game start', 'step']]);
+  play(0, 4);
+  expect(current()).toEqual([['Go to move #2 (1, 1)', 'step']]);
+  fireEvent.click(screen.getByRole('button', { name: 'Go to move #1 (0, 0)' }));
+  expect(current()).toEqual([['Go to move #1 (0, 0)', 'step']]);
+  fireEvent.click(screen.getByRole('button', { name: 'Sort descending' }));
+  expect(current()).toEqual([['Go to move #1 (0, 0)', 'step']]);
 });
 
 test('the move list numbers count down while sorted descending', () => {
