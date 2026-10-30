@@ -14,14 +14,16 @@ function Square(props) {
   
   class Board extends React.Component {
     renderSquare(i) {
-      // named by its (col, row), as in the move list, and its mark
-      const label = 'Square (' + (i % 3) + ', ' + Math.floor(i / 3) + '), ' + (this.props.squares[i] || 'empty');
+      const winning = this.props.winningLine ? this.props.winningLine.includes(i) : false;
+      // named by its (col, row), as in the move list, its mark, and whether it is part of the win
+      const label = 'Square (' + (i % 3) + ', ' + Math.floor(i / 3) + '), ' + (this.props.squares[i] || 'empty') +
+          (winning ? ', winning' : '');
       return (
         <Square
             key={i}
             label={label}
             value={this.props.squares[i]}
-            winning={this.props.winningLine ? this.props.winningLine.includes(i) : false}
+            winning={winning}
             onClick={() => this.props.onClick(i)}
         />
         );
@@ -102,9 +104,12 @@ function Square(props) {
             const desc = move ?
             'Go to move #' + move + ' (' + (step.location % 3) + ', ' + Math.floor(step.location / 3) + ')' :
             'go to game start';
+            // bold for sight, aria-current for a screen reader
             return (
                 <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>
+                    <button onClick={() => this.jumpTo(move)}
+                        aria-current={move === this.state.stepNumber ? 'step' : undefined}
+                    >
                         {move === this.state.stepNumber ? <b>{desc}</b> : desc}
                     </button>
                 </li>
