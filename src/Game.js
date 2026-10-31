@@ -11,7 +11,7 @@ function Square(props) {
         </button>
       );
 }
-  
+
   class Board extends React.Component {
     renderSquare(i) {
       const winning = this.props.winningLine ? this.props.winningLine.includes(i) : false;
@@ -28,7 +28,7 @@ function Square(props) {
         />
         );
     }
-  
+
     render() {
         const rows = [];
         for (let row = 0; row < 3; row++) {
@@ -47,7 +47,7 @@ function Square(props) {
         );
         }
   }
-  
+
   export class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -58,7 +58,7 @@ function Square(props) {
             xIsNext: true,
             stepNumber: 0,
             ascending: true,
-        }
+        };
     }
 
     handleClick(i) {
@@ -84,7 +84,7 @@ function Square(props) {
         this.setState({
             stepNumber: step,
             xIsNext: (step % 2) === 0,
-        })
+        });
     }
 
     toggleSort() {
@@ -96,7 +96,7 @@ function Square(props) {
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
-        const winner = calculateWinner(current.squares)
+        const winner = calculateWinner(current.squares);
         const result = outcome(current.squares, winner);
 
         const moves = history.map((step, move) => {
