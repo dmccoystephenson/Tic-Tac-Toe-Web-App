@@ -1,6 +1,6 @@
 import { act, screen } from '@testing-library/react';
 
-test('the game is mounted into the #root element of public/index.html', () => {
+test('the game is mounted into the #root element', () => {
   const root = document.createElement('div');
   root.id = 'root';
   document.body.appendChild(root);
