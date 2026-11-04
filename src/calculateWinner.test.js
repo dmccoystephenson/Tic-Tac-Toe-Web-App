@@ -41,6 +41,12 @@ test.each(lines)('the winning line on %i, %i, %i is those three squares', (a, b,
   expect(winningLine(squares)).toEqual([a, b, c]);
 });
 
+test('a move completing two lines wins, and only the first line is named', () => {
+  const squares = [X, X, X, X, O, O, X, O, O];
+  expect(calculateWinner(squares)).toBe(X);
+  expect(winningLine(squares)).toEqual([0, 1, 2]);
+});
+
 test('a board without three in a row has no winning line', () => {
   expect(winningLine(Array(9).fill(null))).toBeNull();
   expect(winningLine([X, O, X, X, O, O, O, X, X])).toBeNull();

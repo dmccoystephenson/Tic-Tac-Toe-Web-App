@@ -153,6 +153,46 @@ test('a move after jumping back discards the later moves', () => {
   expect(screen.queryByRole('button', { name: /^Go to move #3/ })).toBeNull();
 });
 
+test('a win on the last square is a win, not a draw', () => {
+  render(<Game />);
+  play(0, 1, 2, 3, 5, 4, 7, 6, 8);
+  expect(status()).toBe('Winner: X');
+  expect(highlighted()).toEqual([2, 5, 8]);
+  expect(reported()).toEqual([null, null, null, null, null, null, null, null, 'X']);
+});
+
+test('jumping back from a draw resumes the game, and the last square draws it again', () => {
+  render(<Game />);
+  play(0, 1, 2, 4, 3, 5, 7, 6, 8);
+  fireEvent.click(screen.getByRole('button', { name: 'Go to move #8 (0, 2)' }));
+  expect(marks()[8]).toBe('');
+  expect(status()).toBe('Next player: X');
+  play(8);
+  expect(status()).toBe('Draw');
+});
+
+test('a game can be played on differently from a move before its win', () => {
+  render(<Game />);
+  play(0, 3, 1, 4, 2);
+  fireEvent.click(screen.getByRole('button', { name: 'Go to move #4 (1, 1)' }));
+  play(8);
+  expect(marks()).toEqual(['X', 'X', '', 'O', 'O', '', '', '', 'X']);
+  expect(status()).toBe('Next player: O');
+  expect(highlighted()).toEqual([]);
+  expect(screen.getByRole('button', { name: 'Go to move #5 (2, 2)' })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Go to move #5 (2, 0)' })).toBeNull();
+});
+
+test('jumping forward to a win restores it, and jumping reports nothing', () => {
+  render(<Game />);
+  play(0, 3, 1, 4, 2);
+  fireEvent.click(screen.getByRole('button', { name: 'Go to move #4 (1, 1)' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Go to move #5 (2, 0)' }));
+  expect(status()).toBe('Winner: X');
+  expect(highlighted()).toEqual([0, 1, 2]);
+  expect(reported()).toEqual([null, null, null, null, 'X']);
+});
+
 function moveList() {
   return screen.getAllByRole('listitem').map((item) => item.textContent);
 }
