@@ -97,6 +97,18 @@ test('a win highlights the three squares that caused it and no others', () => {
   expect(highlighted()).toEqual([2, 4, 6]);
 });
 
+test('a move completing two lines highlights and names the squares of both', () => {
+  render(<Game />);
+  play(1, 4, 2, 5, 3, 7, 6, 8, 0);
+  expect(status()).toBe('Winner: X');
+  expect(highlighted()).toEqual([0, 1, 2, 3, 6]);
+  expect(squares().map((square) => square.getAttribute('aria-label'))).toEqual([
+    'Square (0, 0), X, winning', 'Square (1, 0), X, winning', 'Square (2, 0), X, winning',
+    'Square (0, 1), X, winning', 'Square (1, 1), O', 'Square (2, 1), O',
+    'Square (0, 2), X, winning', 'Square (1, 2), O', 'Square (2, 2), O',
+  ]);
+});
+
 test('no square is highlighted before a win or after jumping back from one', () => {
   render(<Game />);
   play(0, 3, 1, 4);

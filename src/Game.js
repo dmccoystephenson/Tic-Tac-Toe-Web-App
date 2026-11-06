@@ -1,5 +1,5 @@
 import React from 'react';
-import { calculateWinner, winningLine } from './calculateWinner';
+import { calculateWinner, winningSquares } from './calculateWinner';
 import { outcome, reportFinishedGame } from './achievements';
 
 function Square(props) {
@@ -14,7 +14,7 @@ function Square(props) {
 
   class Board extends React.Component {
     renderSquare(i) {
-      const winning = this.props.winningLine ? this.props.winningLine.includes(i) : false;
+      const winning = this.props.winningSquares ? this.props.winningSquares.includes(i) : false;
       // named by its (col, row), as in the move list, its mark, and whether it is part of the win
       const label = 'Square (' + (i % 3) + ', ' + Math.floor(i / 3) + '), ' + (this.props.squares[i] || 'empty') +
           (winning ? ', winning' : '');
@@ -134,7 +134,7 @@ function Square(props) {
             <div className="game-board">
                 <Board
                     squares={current.squares}
-                    winningLine={winningLine(current.squares)}
+                    winningSquares={winningSquares(current.squares)}
                     onClick={(i) => this.handleClick(i)}
                 />
             </div>
