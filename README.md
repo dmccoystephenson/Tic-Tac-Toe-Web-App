@@ -17,7 +17,7 @@ The game lives in `src/Game.js` (with `calculateWinner` and `winningSquares` in 
 - `src/index.test.js` — the game mounting into `#root`
 - `src/calculateWinner.test.js` — every winning line (its winner and its three squares), the squares of both lines when one move completes two, no winner on empty, partial, full, and mixed-mark boards
 - `src/Game.test.js` — turns, each square's (col, row) and mark as its accessible name, ignored clicks on filled squares and won boards, win and draw status (including a win on the last square), the status line as a live region, the winning-square highlight and the winning squares' names (both lines' when one move completes two), jumping through the move history and playing on from before a draw or a win, the (col, row) move labels, the bold current move and its `aria-current` marking, the sort toggle and its countdown numbering, and the outcome each move reports for achievements
-- `src/achievements.test.js` — game outcomes, the achievements each earns, once-per-page-load unlocking, and that a missing or throwing client never breaks the game
+- `src/achievements.test.js` — game outcomes, the achievements each earns, once-per-page-load unlocking, that a missing or throwing client never breaks the game, that the game reports through the client `public/index.html` loads, and that the vendored client unlocks only for a signed-in player on the live site
 
 Run them once with `CI=true npm test` (`npm test` alone starts the interactive watch mode). The `Browser build` workflow runs the same suite on every pull request and push to `Main`, before the build.
 
