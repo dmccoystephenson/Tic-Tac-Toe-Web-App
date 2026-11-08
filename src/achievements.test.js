@@ -58,14 +58,18 @@ test('the page loads the vendored client', () => {
   expect(publicFile('index.html')).toContain('<script src="%PUBLIC_URL%/arcade-scores.js"></script>');
 });
 
-// the vendored client, run on a stand-in page so that its address and session can be chosen
+// the vendored client, run on a stand-in page so that its address and session can be chosen;
+// a signedIn of null makes the session lookup itself fail
 function clientAt(href, signedIn) {
   const { hostname, protocol } = new URL(href);
-  const fetch = jest.fn((url) => Promise.resolve({
-    ok: true,
-    status: 200,
-    json: () => Promise.resolve(url.endsWith('/v1/session') ? { signedIn } : {}),
-  }));
+  const fetch = jest.fn((url) => {
+    const failed = url.endsWith('/v1/session') && signedIn === null;
+    return Promise.resolve({
+      ok: !failed,
+      status: failed ? 503 : 200,
+      json: () => Promise.resolve(url.endsWith('/v1/session') ? { signedIn } : {}),
+    });
+  });
   const page = { location: { hostname, protocol } };
   vm.runInNewContext(publicFile('arcade-scores.js'), { window: page, fetch });
   return { client: page.ArcadeScores, requests: () => fetch.mock.calls.map(([url]) => url), fetch };
@@ -85,6 +89,15 @@ test('a signed-out player on the live site unlocks nothing', async () => {
   const { client, requests } = clientAt(LIVE, false);
   await client.unlock('first-game');
   expect(requests()).toEqual([API + '/v1/session']);
+});
+
+// the client only holds back for a known signed-out session; whether to accept the unlock is
+// then up to arcade-social
+test('a failed session lookup on the live site still sends the unlock', async () => {
+  const { client, requests, fetch } = clientAt(LIVE, null);
+  await client.unlock('first-game');
+  expect(requests()).toEqual([API + '/v1/session', API + '/v1/achievements/first-game']);
+  expect(fetch.mock.calls[1][1].method).toBe('POST');
 });
 
 test.each([
