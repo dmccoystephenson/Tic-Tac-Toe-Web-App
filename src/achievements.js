@@ -3,7 +3,8 @@
 // player instead unlocks "first-game" for finishing a game (a win or a draw) and "draw" for a
 // draw. The client is public/arcade-scores.js, vendored unchanged from arcade-social's
 // clients/js and loaded by public/index.html; it sends nothing unless the page is
-// tic-tac-toe-web.play.danielstephenson.dev and the player is signed in, and never throws.
+// tic-tac-toe-web.play.danielstephenson.dev, holds back for a player its sign-in check finds
+// signed out (but sends anyway if that check fails), and never throws.
 
 // "X" or "O" for a win, "draw" for a full board without one, null while the game goes on
 export function outcome(squares, winner) {
