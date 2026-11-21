@@ -27,6 +27,11 @@
     <title>Tic Tac Toe</title>
     <!-- achievements (arcade-social); vendored from Stephenson-Software/arcade-social clients/js -->
     <script src="%PUBLIC_URL%/arcade-scores.js"></script>
+    <!-- the 3D board: Strata's grid relay (public/strata/, fetched by scripts/fetch-strata.js).
+         These are small; the relay's module is downloaded only when the 3D board is wanted. -->
+    <script src="%PUBLIC_URL%/strata/strata-loader.js"></script>
+    <script src="%PUBLIC_URL%/strata/strata-kit.js"></script>
+    <script src="%PUBLIC_URL%/strata/grid-relay.js"></script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

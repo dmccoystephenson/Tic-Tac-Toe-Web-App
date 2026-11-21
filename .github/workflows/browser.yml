@@ -35,6 +35,24 @@ jobs:
         run: |
           test -f build/index.html
           grep -q 'src="./static/js/' build/index.html
+          # the 3D board: Strata's grid relay, fetched by scripts/fetch-strata.js (prebuild)
+          for f in grid-relay-scene.js grid-relay-scene.wasm grid-relay.js strata-kit.js strata-loader.js; do
+            test -s "build/strata/$f"
+          done
+      - name: Play the build in headless Chromium, in 3D and 2D (e2e/board3d.cjs)
+        run: |
+          mkdir -p "$RUNNER_TEMP/e2e" && cd "$RUNNER_TEMP/e2e"
+          npm install --no-save --no-package-lock playwright@1.65.1
+          npx playwright install --with-deps chromium
+          NODE_PATH="$RUNNER_TEMP/e2e/node_modules" node "$GITHUB_WORKSPACE/e2e/board3d.cjs" \
+            "$GITHUB_WORKSPACE/build" "$RUNNER_TEMP/e2e/shots"
+      - name: Keep the browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: board3d
+          path: ${{ runner.temp }}/e2e/shots
+          if-no-files-found: ignore
       - name: Version this build (version.txt + commit)
         run: echo "$(tr -d '[:space:]' < version.txt)+g${GITHUB_SHA::7}" > build-version.txt
       - name: Deploy to arcade

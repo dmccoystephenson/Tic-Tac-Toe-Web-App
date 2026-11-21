@@ -39,8 +39,60 @@ ol, ul {
 .game {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px 0;
 }
 
 .game-info {
   margin-left: 20px;
+}
+
+/* the 3D board (Board3D.js): a square canvas for Strata's grid relay */
+.board-3d {
+  position: relative;
+  width: min(360px, calc(100vw - 40px));
+  aspect-ratio: 1 / 1;
+  background: #1a1f29;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.board-3d[hidden] {
+  display: none;
+}
+
+#relay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+.view-toggle {
+  display: block;
+  margin-top: 10px;
+}
+
+.view-toggle[aria-pressed="true"] {
+  font-weight: bold;
+}
+
+.view-note {
+  margin-top: 6px;
+  color: #555;
+}
+
+/* out of sight, still focusable and read aloud: the 2D board behind the 3D one */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }

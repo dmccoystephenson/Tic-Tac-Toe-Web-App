@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Strata's grid relay, fetched by scripts/fetch-strata.js
+/public/strata/
