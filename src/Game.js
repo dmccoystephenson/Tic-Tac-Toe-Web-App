@@ -1,6 +1,7 @@
 import React from 'react';
 import { calculateWinner, winningSquares } from './calculateWinner';
 import { outcome, reportFinishedGame } from './achievements';
+import { Board3D } from './Board3D';
 
 function Square(props) {
   return (
@@ -132,11 +133,18 @@ export class Game extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
-          <Board
+          {/* in 3D where it can run (Board3D.js), with this board as its fallback and its keyboard and screen-reader form */}
+          <Board3D
             squares={current.squares}
             winningSquares={winningSquares(current.squares)}
             onClick={(i) => this.handleClick(i)}
-          />
+          >
+            <Board
+              squares={current.squares}
+              winningSquares={winningSquares(current.squares)}
+              onClick={(i) => this.handleClick(i)}
+            />
+          </Board3D>
         </div>
         <div className="game-info">
           {/* a polite live region, so a screen reader announces each turn and the result */}
