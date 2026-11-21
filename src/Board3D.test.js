@@ -172,14 +172,18 @@ test('the move list jumps the 3D board back too', () => {
   expect(relay.last(2).anchors).toEqual([[0, 0, 0, 0]]);
 });
 
-test('keys never reach the relay, so Tab and Space keep working on the page', () => {
+test('the relay is asked to leave every key to the page, so Tab, Enter and Space keep working there', () => {
   const relay = fakeRelay();
   start(relay);
-  const relayKeys = jest.fn();
-  window.addEventListener('keydown', relayKeys);
+  expect(relay.request).toHaveBeenCalled();
+  for (const [request] of relay.request.mock.calls) {
+    expect(JSON.parse(request).keys).toBe(false);
+  }
+  const pageKeys = jest.fn();
+  window.addEventListener('keydown', pageKeys);
   fireEvent.keyDown(screen.getByRole('button', { name: 'Sort descending' }), { key: 'Tab', code: 'Tab' });
-  expect(relayKeys).not.toHaveBeenCalled();
-  window.removeEventListener('keydown', relayKeys);
+  expect(pageKeys).toHaveBeenCalled();
+  window.removeEventListener('keydown', pageKeys);
 });
 
 test('the 3D view switches off and on mid-game, keeping the board, and the choice is remembered', () => {

@@ -12,7 +12,7 @@ const os = require('os');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const STRATA_VERSION = '0.9.1';
+const STRATA_VERSION = '0.10.0';
 const ASSET = `strata-${STRATA_VERSION}-wasm32-emscripten.tar.gz`;
 const BASE = `https://github.com/Preponderous-Software/strata/releases/download/v${STRATA_VERSION}`;
 const FILES = ['grid-relay-scene.js', 'grid-relay-scene.wasm', 'grid-relay.js', 'strata-kit.js', 'strata-loader.js'];

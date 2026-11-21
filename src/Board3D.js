@@ -65,13 +65,6 @@ function equal(a, b) {
   return true;
 }
 
-// Keys never reach the relay: the board has no keys of its own, and the relay
-// would otherwise keep Tab and Space from moving and pressing the page's
-// buttons. Listening first (capturing at the window), this stops them there.
-function holdKeys(e) {
-  e.stopPropagation();
-}
-
 export class Board3D extends React.Component {
   constructor(props) {
     super(props);
@@ -96,7 +89,6 @@ export class Board3D extends React.Component {
 
   componentWillUnmount() {
     this.stopWatching();
-    this.holdKeys(false);
     if (relay() && relay().state() === 'ready') {
       relay().close();
     }
@@ -111,7 +103,10 @@ export class Board3D extends React.Component {
     if (!r) {
       return;
     }
-    r.request(JSON.stringify({ canvas: 'relay', base: 'strata/', title: 'the 3D board', maxBytes: 4000000 }));
+    // keys: false leaves every key to the page: the board has no keys of its
+    // own, and Tab, Enter and Space keep moving and pressing the page's buttons
+    // (the 2D squares under the 3D board among them).
+    r.request(JSON.stringify({ canvas: 'relay', base: 'strata/', title: 'the 3D board', maxBytes: 4000000, keys: false }));
     this.watch();
   }
 
@@ -128,17 +123,6 @@ export class Board3D extends React.Component {
     }
   }
 
-  holdKeys(on) {
-    if (on && !this.holding) {
-      window.addEventListener('keydown', holdKeys, true);
-      window.addEventListener('keyup', holdKeys, true);
-    } else if (!on && this.holding) {
-      window.removeEventListener('keydown', holdKeys, true);
-      window.removeEventListener('keyup', holdKeys, true);
-    }
-    this.holding = on;
-  }
-
   // Every frame while the relay loads or shows: its state, the player's input
   // and anything the board needs to send.
   tick() {
@@ -153,7 +137,6 @@ export class Board3D extends React.Component {
       return;
     }
     if (relayState === 'ready') {
-      this.holdKeys(true);
       this.input(JSON.parse(r.poll()));
       this.send();
     }
@@ -204,7 +187,6 @@ export class Board3D extends React.Component {
     if (want) {
       this.start();
     } else {
-      this.holdKeys(false);
       if (relay() && relay().state() === 'ready') {
         relay().close();
       }
