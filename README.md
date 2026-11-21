@@ -4,8 +4,22 @@
 
 This web application allows two individuals to play tic tac toe with each other. This was created using a tutorial (https://reactjs.org/tutorial/tutorial.html) to gain familiarity with ReactJS.
 
+![The 3D board in a desktop browser after X has won down the middle column: red X crosses on yellow tiles, two blue O rings, with the status line and the move list beside it](docs/images/3d-hero.png)
+
+*The board in 3D, drawn by [Strata](https://github.com/Preponderous-Software/strata)'s grid relay, after X has won (see "Play in 3D or 2D" below).*
+
 ## Play in your browser
 Two players take turns on one device at https://tic-tac-toe-web.play.danielstephenson.dev, listed with the rest at [danielstephenson.dev/play](https://danielstephenson.dev/play). Pushes to `Main` build it and deploy it to [arcade](https://github.com/Stephenson-Software/arcade) (`.github/workflows/browser.yml`).
+
+## Play in 3D or 2D
+- **3D** (the default): https://tic-tac-toe-web.play.danielstephenson.dev
+- **2D**: https://tic-tac-toe-web.play.danielstephenson.dev/?view=2d
+
+`?view=2d` or `?view=3d` in the address picks the board for that visit, and the **3D view** button switches between them mid-game (the choice is remembered on that device). With `?view=2d` nothing of the 3D board is downloaded.
+
+<img src="docs/images/3d-play.gif" width="480" alt="A game played on the 3D board in a desktop browser: X takes the middle, O a corner, X the top middle, O the other top corner, and X wins down the middle column, whose tiles turn yellow while the move list grows beside the board"> <img src="docs/images/3d-phone.png" width="200" alt="The same win on a phone held upright: the 3D board fills the screen's width, with the 3D view button, the status line 'Winner: X' and the move list below it">
+
+*Left: a real game on the 3D board in a desktop browser, both players' moves made with clicks. Right: the same game played with taps on a phone (390 x 844). The pictures were taken from the production build (`npm run build`) in headless Chromium with Playwright, with Strata's real relay; the GIF was cut from that run's screen recording.*
 
 ## The board in 3D
 ![A win on the 3D board](docs/images/board-3d.png)
